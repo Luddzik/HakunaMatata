@@ -24,6 +24,28 @@ public class CardController : MonoBehaviour
         _cardSpriteIndex = cardSpriteIndex;
         _frontImage.GetComponent<Image>().sprite = frontFace;
     }
+
+    public void ClearCard()
+    {
+        _frontImage.SetActive(false);
+        _backImage.SetActive(true);
+        
+        transform.localScale = new Vector3(1, 1, 1);
+
+        _isMatched = false;
+        
+        if (_resetCoroutine != null)
+        {
+            StopCoroutine(_resetCoroutine);
+            _resetCoroutine = null;
+        }
+        
+        if (_flipCoroutine != null)
+        {
+            StopCoroutine(_flipCoroutine);
+            _flipCoroutine = null;
+        }
+    }
     
     public void FlipCard(bool forceFace = false, bool reset = false)
     {

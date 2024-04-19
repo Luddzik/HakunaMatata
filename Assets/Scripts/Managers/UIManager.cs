@@ -30,14 +30,24 @@ public class UIManager : MonoBehaviour
     [Header("Scene References")] 
     [SerializeField] private RectTransform _verticalLayoutTransform;
     
+    [Header("Object Pools")]
+    [SerializeField] private int _initialHorizontalPoolSize = 6;
+    [SerializeField] private int _initialCardPoolSize = 36;
+
     private UIState _currentState;
+    private List<GameObject> _horizontalLayoutsReference;
     private List<GameObject> _cardsReference;
+    
+    private List<GameObject> _horizontalLayoutPool;
+    private List<GameObject> _cardPool;
 
     public void Initialize()
     {
         Debug.Log("Initializing UI Manager");
         
+        _horizontalLayoutsReference = new List<GameObject>();
         _cardsReference = new List<GameObject>();
+        InitializeObjectPools();
         SetUIState(UIState.MainMenu);
     }
     
@@ -80,10 +90,10 @@ public class UIManager : MonoBehaviour
         int index = 0;
         for (int i = 0; i < rowCount; i++)
         {
-            GameObject horizontalLayout = Instantiate(_horizontalLayoutPrefab, _verticalLayoutTransform);
+            GameObject horizontalLayout = GetPooledObject(_horizontalLayoutPool, _horizontalLayoutPrefab, _verticalLayoutTransform);
             for (int j = 0; j < columnCount; j++)
             {
-                GameObject card = Instantiate(_cardPrefab, horizontalLayout.transform);
+                GameObject card = GetPooledObject(_cardPool, _cardPrefab, horizontalLayout.transform);
                 CardController cardController = card.GetComponent<CardController>();
                 Button cardButton = card.GetComponent<Button>();
                 
@@ -93,9 +103,12 @@ public class UIManager : MonoBehaviour
                     cardController.FlipCard(forceFace: true);
                     CardSelected(cardController);
                 });
+                
+                _cardsReference.Add(card);
                 index++;
             }
-            _cardsReference.Add(horizontalLayout);
+            
+            _horizontalLayoutsReference.Add(horizontalLayout);
         }
     }
 
@@ -104,13 +117,66 @@ public class UIManager : MonoBehaviour
         _scoreText.text = "Score: " + score;
         _noOfTriesText.text = "Tries Left: " + noOfTries;
     }
+    
+    private void InitializeObjectPools()
+    {
+        _horizontalLayoutPool = new List<GameObject>();
+        _cardPool = new List<GameObject>();
+
+        for (int i = 0; i < _initialHorizontalPoolSize; i++)
+        {
+            GameObject horizontalLayout = Instantiate(_horizontalLayoutPrefab);
+            horizontalLayout.SetActive(false);
+            _horizontalLayoutPool.Add(horizontalLayout);
+        }
+        
+        for (int i = 0; i < _initialCardPoolSize; i++)
+        {
+            GameObject card = Instantiate(_cardPrefab);
+            card.SetActive(false);
+            _cardPool.Add(card);
+        }
+    }
+    
+    private GameObject GetPooledObject(List<GameObject> pool, GameObject prefab, Transform parent)
+    {
+        GameObject obj;
+        if (pool.Count > 0)
+        {
+            obj = pool[0];
+            pool.RemoveAt(0);
+        }
+        else
+        {
+            obj = Instantiate(prefab);
+        }
+
+        obj.transform.SetParent(parent);
+        obj.SetActive(true);
+        return obj;
+    }
+
+    private void ReturnToPool(List<GameObject> pool, GameObject obj)
+    {
+        obj.SetActive(false);
+        pool.Add(obj);
+    }
 
     private void ClearLevel()
     {
         foreach (GameObject card in _cardsReference)
         {
-            Destroy(card);
+            Button cardButton = card.GetComponent<Button>();
+            cardButton.onClick.RemoveAllListeners();
+            CardController cardController = card.GetComponent<CardController>();
+            cardController.ClearCard();
+            ReturnToPool(_cardPool, card);
         }
+        foreach (GameObject horizontal in _horizontalLayoutsReference)
+        {
+            ReturnToPool(_horizontalLayoutPool, horizontal);
+        }
+        
         _cardsReference.Clear();
     }
 
