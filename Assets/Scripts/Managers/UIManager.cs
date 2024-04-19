@@ -24,11 +24,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private RectTransform _verticalLayoutTransform;
     
     private UIState _currentState;
+    private List<GameObject> _cardsReference;
 
     public void Initialize()
     {
         Debug.Log("Initializing UI Manager");
         SetUIState(UIState.MainMenu);
+        _cardsReference = new List<GameObject>();
     }
     
     public void StartGame(int level)
@@ -44,6 +46,8 @@ public class UIManager : MonoBehaviour
 
     public void SetupPlayGrid(int rowCount, int columnCount, List<Sprite> sprites, List<int> indexes)
     {
+        ClearLevel();
+        
         int index = 0;
         for (int i = 0; i < rowCount; i++)
         {
@@ -62,7 +66,17 @@ public class UIManager : MonoBehaviour
                 });
                 index++;
             }
+            _cardsReference.Add(horizontalLayout);
         }
+    }
+
+    private void ClearLevel()
+    {
+        foreach (GameObject card in _cardsReference)
+        {
+            Destroy(card);
+        }
+        _cardsReference.Clear();
     }
 
     private void CardSelected(CardController card)
