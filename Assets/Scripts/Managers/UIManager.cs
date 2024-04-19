@@ -227,6 +227,7 @@ public class UIManager : MonoBehaviour
     private void CardSelected(CardController card)
     {
         if (card.IsMatched) return;
+        if (!card.IsFlipped) return;
         
         DDOL.Instance.CardSelected(card);
     }

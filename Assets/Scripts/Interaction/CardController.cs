@@ -6,9 +6,10 @@ public class CardController : MonoBehaviour
 {
     [SerializeField] private GameObject _frontImage;
     [SerializeField] private GameObject _backImage;
-
+    
     public bool IsMatched => _isMatched;
     public int CardIndex => _cardSpriteIndex;
+    public bool IsFlipped => _isFlipped;
 
     private readonly float _flipSpeed = 5f;
     

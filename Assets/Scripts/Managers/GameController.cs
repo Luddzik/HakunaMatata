@@ -74,6 +74,8 @@ public class GameController : MonoBehaviour
                 _score += (int)Mathf.Pow(2, _combo);
                 _combo++;
                 _currentPairCount++;
+                
+                DDOL.Instance.MatchingOccured(true);
             }
             else
             {
@@ -81,6 +83,8 @@ public class GameController : MonoBehaviour
                 cardController.NoMatchFound();
                 _numberOfTriesLeft--;
                 _combo = 0;
+                
+                DDOL.Instance.MatchingOccured(false);
             }
             _currentSelection = null;
             

@@ -67,10 +67,17 @@ public class DDOL : MonoBehaviour
     {
         StartLevel(_gameController.LoadedLevel);
     }
+    
+    public int GetLevelCount()
+    {
+        return _gameController.GetLevelCount();
+    }
 
     public void CardSelected(CardController card)
     {
         _gameController.CardSelected(card);
+        
+        _audioManager.PlayClickAudio();
     }
 
     public void GameStateUpdate()
@@ -80,16 +87,27 @@ public class DDOL : MonoBehaviour
         if (_gameController.NumberOfTriesLeft <= 0)
         {
             _uiManager.GameOver();
+            
+            _audioManager.PlayGameoverAudio();
         }
         else if (_gameController.LevelPairCount == _gameController.CurrentPairCount)
         {
             _uiManager.LevelComplete();
             SetHighestUnlockedLevel(_gameController.LoadedLevel);
+            
+            _audioManager.PlayGameoverAudio();
         }
     }
 
-    public int GetLevelCount()
+    public void MatchingOccured(bool correct)
     {
-        return _gameController.GetLevelCount();
+        if (correct)
+        {
+            _audioManager.PlayCorrectAudio();
+        }
+        else
+        {
+            _audioManager.PlayErrorAudio();
+        }
     }
 }
