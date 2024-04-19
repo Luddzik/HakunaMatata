@@ -29,8 +29,8 @@ public class UIManager : MonoBehaviour
     public void Initialize()
     {
         Debug.Log("Initializing UI Manager");
-        SetUIState(UIState.MainMenu);
         _cardsReference = new List<GameObject>();
+        SetUIState(UIState.MainMenu);
     }
     
     public void StartGame(int level)

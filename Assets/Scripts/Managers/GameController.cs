@@ -22,7 +22,6 @@ public class GameController : MonoBehaviour
     
     public void StartGame(int level)
     {
-        // Setup game 
         SetupLevel(level);
     }
     
@@ -56,13 +55,13 @@ public class GameController : MonoBehaviour
 
     private void SetupLevel(int level)
     {
-        // Setup level
         Debug.Log("Setting up level " + level);
         
         LevelData levelData = _gameDataSO.GetLevelData(level);
         int cardCount = levelData.rowCount * levelData.columnCount;
         _levelSprites = new List<Sprite>();
         _levelIndexes = new List<int>();
+        
         for (int i = 0; i < cardCount / 2; i++)
         {
             _levelIndexes.Add(i);

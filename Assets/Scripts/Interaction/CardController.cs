@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -63,16 +62,6 @@ public class CardController : MonoBehaviour
         StartCoroutine(_resetCoroutine);
     }
 
-    // Debug flip function
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            FlipCard();
-        }
-    }
-    // --------------------
-    
     private IEnumerator ResetCard()
     {
         yield return new WaitForSeconds(1f);
