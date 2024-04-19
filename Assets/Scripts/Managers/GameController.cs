@@ -15,6 +15,10 @@ public class GameController : MonoBehaviour
 
     private CardController _currentSelection;
 
+    private int _numberOfChanges;
+    private int _combo;
+    private int _score;
+
     public void Initialize()
     {
         Debug.Log("Initializing game controller");
@@ -33,6 +37,7 @@ public class GameController : MonoBehaviour
     public void CardSelected(CardController cardController)
     {
         Debug.Log("Card selected: " + cardController.CardIndex);
+        
         if (_currentSelection == null)
         {
             _currentSelection = cardController;
@@ -43,11 +48,15 @@ public class GameController : MonoBehaviour
             {
                 _currentSelection.MatchFound();
                 cardController.MatchFound();
+                _score += (int)Mathf.Pow(2, _combo);
+                _combo++;
             }
             else
             {
                 _currentSelection.NoMatchFound();
                 cardController.NoMatchFound();
+                _numberOfChanges--;
+                _combo = 0;
             }
             _currentSelection = null;
         }
@@ -61,7 +70,7 @@ public class GameController : MonoBehaviour
         int cardCount = levelData.rowCount * levelData.columnCount;
         _levelSprites = new List<Sprite>();
         _levelIndexes = new List<int>();
-        
+
         for (int i = 0; i < cardCount / 2; i++)
         {
             _levelIndexes.Add(i);
@@ -73,5 +82,9 @@ public class GameController : MonoBehaviour
         {
             _levelSprites.Add(_spritesSO.GetSpriteAt(_levelIndexes[i]));
         }
+        
+        _score = 0;
+        _combo = 0;
+        _numberOfChanges = Mathf.RoundToInt(levelData.rowCount * levelData.columnCount/2) + 1;
     }
 }
