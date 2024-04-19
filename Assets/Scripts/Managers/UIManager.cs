@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,10 +12,14 @@ public class UIManager : MonoBehaviour
         GameOver
     }
     
-    [Header("UI Elements")]
+    [Header("UI Group Elements")]
     [SerializeField] private GameObject _mainMenuUI;
     [SerializeField] private GameObject _gameUI;
     [SerializeField] private GameObject _gameOverUI;
+    
+    [Header("In-Game UI Elements")]
+    [SerializeField] private TMP_Text _scoreText;
+    [SerializeField] private TMP_Text _noOfTriesText;
 
     [Header("Prefabs")] 
     [SerializeField] private GameObject _horizontalLayoutPrefab;
@@ -45,6 +50,11 @@ public class UIManager : MonoBehaviour
         SetUIState(UIState.MainMenu);
     }
 
+    public void GameOver()
+    {
+        SetUIState(UIState.GameOver);
+    }
+
     public void SetupPlayGrid(int rowCount, int columnCount, List<Sprite> sprites, List<int> indexes)
     {
         ClearLevel();
@@ -69,6 +79,12 @@ public class UIManager : MonoBehaviour
             }
             _cardsReference.Add(horizontalLayout);
         }
+    }
+
+    public void UpdateGameStateUI(int score, int noOfTries)
+    {
+        _scoreText.text = "Score: " + score;
+        _noOfTriesText.text = "Tries Left: " + noOfTries;
     }
 
     private void ClearLevel()

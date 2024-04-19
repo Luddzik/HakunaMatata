@@ -7,15 +7,20 @@ public class GameController : MonoBehaviour
     [SerializeField] private SOLevelData _gameDataSO;
     [SerializeField] private SOSprites _spritesSO;
 
+    public int NumberOfTriesLeft => _numberOfTriesLeft;
+    public int Score => _score;
+    
     public List<Sprite> LevelSprites => _levelSprites;
     public List<int> LevelIndexes => _levelIndexes;
-    
+
     private List<Sprite> _levelSprites;
     private List<int> _levelIndexes;
 
     private CardController _currentSelection;
 
-    private int _numberOfChanges;
+    private int _loadedLevel;
+
+    private int _numberOfTriesLeft;
     private int _combo;
     private int _score;
 
@@ -55,16 +60,20 @@ public class GameController : MonoBehaviour
             {
                 _currentSelection.NoMatchFound();
                 cardController.NoMatchFound();
-                _numberOfChanges--;
+                _numberOfTriesLeft--;
                 _combo = 0;
             }
             _currentSelection = null;
+            
+            DDOL.Instance.GameStateUpdate();
         }
     }
 
     private void SetupLevel(int level)
     {
         Debug.Log("Setting up level " + level);
+
+        _loadedLevel = level;
         
         LevelData levelData = _gameDataSO.GetLevelData(level);
         int cardCount = levelData.rowCount * levelData.columnCount;
@@ -85,6 +94,6 @@ public class GameController : MonoBehaviour
         
         _score = 0;
         _combo = 0;
-        _numberOfChanges = Mathf.RoundToInt(levelData.rowCount * levelData.columnCount/2) + 1;
+        _numberOfTriesLeft = Mathf.RoundToInt(levelData.rowCount * levelData.columnCount/2) + 1;
     }
 }
