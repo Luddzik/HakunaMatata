@@ -6,6 +6,11 @@ public class SOLevelData : ScriptableObject
 {
     [SerializeField] private LevelData[] _gameData;
 
+    public int GetLevelCount()
+    {
+        return _gameData.Length;
+    }
+    
     public LevelData GetLevelData(int level)
     {
         return _gameData[level];

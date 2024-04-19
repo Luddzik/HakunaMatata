@@ -33,10 +33,27 @@ public class DDOL : MonoBehaviour
     public void StartLevel(int level)
     {
         LevelData levelData = _gameController.GetLevelData(level);
+        
+        if (levelData.level == -1)
+        {
+            _uiManager.BackButton();
+            return;
+        }
+        
         _gameController.StartGame(level);
         _uiManager.SetupPlayGrid(levelData.rowCount, levelData.columnCount, _gameController.LevelSprites, _gameController.LevelIndexes);
         
         GameStateUpdate();
+    }
+
+    public void LoadNextLevel()
+    {
+        StartLevel(_gameController.LoadedLevel + 1);
+    }
+
+    public void RestartLevel()
+    {
+        StartLevel(_gameController.LoadedLevel);
     }
 
     public void CardSelected(CardController card)
@@ -51,6 +68,10 @@ public class DDOL : MonoBehaviour
         if (_gameController.NumberOfTriesLeft <= 0)
         {
             _uiManager.GameOver();
+        }
+        else if (_gameController.LevelPairCount == _gameController.CurrentPairCount)
+        {
+            _uiManager.LevelComplete();
         }
     }
 }

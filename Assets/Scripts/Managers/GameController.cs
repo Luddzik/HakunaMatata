@@ -9,6 +9,10 @@ public class GameController : MonoBehaviour
 
     public int NumberOfTriesLeft => _numberOfTriesLeft;
     public int Score => _score;
+    public int CurrentPairCount => _currentPairCount;
+    public int LevelPairCount => _levelPairCount;
+    
+    public int LoadedLevel => _loadedLevel;
     
     public List<Sprite> LevelSprites => _levelSprites;
     public List<int> LevelIndexes => _levelIndexes;
@@ -19,7 +23,8 @@ public class GameController : MonoBehaviour
     private CardController _currentSelection;
 
     private int _loadedLevel;
-
+    private int _currentPairCount;
+    private int _levelPairCount;
     private int _numberOfTriesLeft;
     private int _combo;
     private int _score;
@@ -36,6 +41,14 @@ public class GameController : MonoBehaviour
     
     public LevelData GetLevelData(int level)
     {
+        if (level >= _gameDataSO.GetLevelCount())
+        {
+            Debug.Log("No new levels available. Returning to main menu.");
+            LevelData levelData = new LevelData();
+            levelData.level = -1;
+            return levelData;
+        }
+        
         return _gameDataSO.GetLevelData(level);
     }
     
@@ -55,6 +68,7 @@ public class GameController : MonoBehaviour
                 cardController.MatchFound();
                 _score += (int)Mathf.Pow(2, _combo);
                 _combo++;
+                _currentPairCount++;
             }
             else
             {
@@ -79,8 +93,10 @@ public class GameController : MonoBehaviour
         int cardCount = levelData.rowCount * levelData.columnCount;
         _levelSprites = new List<Sprite>();
         _levelIndexes = new List<int>();
+        
+        _levelPairCount = cardCount / 2;
 
-        for (int i = 0; i < cardCount / 2; i++)
+        for (int i = 0; i < _levelPairCount; i++)
         {
             _levelIndexes.Add(i);
             _levelIndexes.Add(i);
@@ -95,5 +111,6 @@ public class GameController : MonoBehaviour
         _score = 0;
         _combo = 0;
         _numberOfTriesLeft = Mathf.RoundToInt(levelData.rowCount * levelData.columnCount/2) + 1;
+        _currentPairCount = 0;
     }
 }

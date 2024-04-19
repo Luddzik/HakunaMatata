@@ -9,13 +9,15 @@ public class UIManager : MonoBehaviour
     {
         MainMenu,
         Game,
-        GameOver
+        GameOver,
+        LevelComplete
     }
     
     [Header("UI Group Elements")]
     [SerializeField] private GameObject _mainMenuUI;
     [SerializeField] private GameObject _gameUI;
     [SerializeField] private GameObject _gameOverUI;
+    [SerializeField] private GameObject _levelCompleteUI;
     
     [Header("In-Game UI Elements")]
     [SerializeField] private TMP_Text _scoreText;
@@ -53,6 +55,22 @@ public class UIManager : MonoBehaviour
     public void GameOver()
     {
         SetUIState(UIState.GameOver);
+    }
+    
+    public void LevelComplete()
+    {
+        SetUIState(UIState.LevelComplete);
+    }
+    
+    public void RestartLevel()
+    {
+        DDOL.Instance.RestartLevel();
+        SetUIState(UIState.Game);
+    }
+
+    public void NextLevel()
+    {
+        DDOL.Instance.LoadNextLevel();
     }
 
     public void SetupPlayGrid(int rowCount, int columnCount, List<Sprite> sprites, List<int> indexes)
@@ -110,5 +128,6 @@ public class UIManager : MonoBehaviour
         _mainMenuUI.SetActive(_currentState == UIState.MainMenu);
         _gameUI.SetActive(_currentState == UIState.Game);
         _gameOverUI.SetActive(_currentState == UIState.GameOver);
+        _levelCompleteUI.SetActive(_currentState == UIState.LevelComplete);
     }
 }
