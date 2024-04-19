@@ -12,4 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45e2e192ab6b54f488fff98b1ab9e822, type: 3}
   m_Name: PairSprites
   m_EditorClassIdentifier: 
-  _sprites: []
+  _backSprite: {fileID: 0}
+  _sprites:
+  - {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}

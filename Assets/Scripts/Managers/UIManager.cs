@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -40,16 +42,34 @@ public class UIManager : MonoBehaviour
         SetUIState(UIState.MainMenu);
     }
 
-    public void SetupPlayGrid(int rowCount, int columnCount)
+    public void SetupPlayGrid(int rowCount, int columnCount, List<Sprite> sprites, List<int> indexes)
     {
+        int index = 0;
         for (int i = 0; i < rowCount; i++)
         {
             GameObject horizontalLayout = Instantiate(_horizontalLayoutPrefab, _verticalLayoutTransform);
             for (int j = 0; j < columnCount; j++)
             {
                 GameObject card = Instantiate(_cardPrefab, horizontalLayout.transform);
+                CardController cardController = card.GetComponent<CardController>();
+                Button cardButton = card.GetComponent<Button>();
+                
+                cardController.InitializeCard(sprites[index], indexes[index]);
+                cardButton.onClick.AddListener(() =>
+                {
+                    cardController.FlipCard(forceFace: true);
+                    CardSelected(cardController);
+                });
+                index++;
             }
         }
+    }
+
+    private void CardSelected(CardController card)
+    {
+        if (card.IsMatched) return;
+        
+        DDOL.Instance.CardSelected(card);
     }
 
     private void SetUIState(UIState state)

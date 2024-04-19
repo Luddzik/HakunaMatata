@@ -34,6 +34,11 @@ public class DDOL : MonoBehaviour
     {
         LevelData levelData = _gameController.GetLevelData(level);
         _gameController.StartGame(level);
-        _uiManager.SetupPlayGrid(levelData.rowCount, levelData.columnCount);
+        _uiManager.SetupPlayGrid(levelData.rowCount, levelData.columnCount, _gameController.LevelSprites, _gameController.LevelIndexes);
+    }
+
+    public void CardSelected(CardController card)
+    {
+        _gameController.CardSelected(card);
     }
 }
