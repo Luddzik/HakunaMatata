@@ -9,6 +9,10 @@ public class DDOL : MonoBehaviour
     [SerializeField] private GameController _gameController;
     [SerializeField] private UIManager _uiManager;
     [SerializeField] private AudioManager _audioManager;
+    
+    public int HighestUnlockedLevel => _highestUnlockedLevel;
+    
+    private int _highestUnlockedLevel;
 
     private void Awake()
     {
@@ -25,11 +29,18 @@ public class DDOL : MonoBehaviour
 
     private void Start()
     {
+        _highestUnlockedLevel = -1;
+        
         _gameController.Initialize();
         _uiManager.Initialize();
         _audioManager.Initialize();
     }
     
+    private void SetHighestUnlockedLevel(int level)
+    {
+        _highestUnlockedLevel = level;
+    }
+
     public void StartLevel(int level)
     {
         LevelData levelData = _gameController.GetLevelData(level);
@@ -72,6 +83,12 @@ public class DDOL : MonoBehaviour
         else if (_gameController.LevelPairCount == _gameController.CurrentPairCount)
         {
             _uiManager.LevelComplete();
+            SetHighestUnlockedLevel(_gameController.LoadedLevel);
         }
+    }
+
+    public int GetLevelCount()
+    {
+        return _gameController.GetLevelCount();
     }
 }

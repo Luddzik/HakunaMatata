@@ -39,6 +39,11 @@ public class GameController : MonoBehaviour
         SetupLevel(level);
     }
     
+    public int GetLevelCount()
+    {
+        return _gameDataSO.GetLevelCount();
+    }
+    
     public LevelData GetLevelData(int level)
     {
         if (level >= _gameDataSO.GetLevelCount())

@@ -24,10 +24,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text _noOfTriesText;
 
     [Header("Prefabs")] 
+    [SerializeField] private GameObject _playLevelPrefab;
+    [Space]
     [SerializeField] private GameObject _horizontalLayoutPrefab;
     [SerializeField] private GameObject _cardPrefab;
 
     [Header("Scene References")] 
+    [SerializeField] private RectTransform _levelHolderTransform;
     [SerializeField] private RectTransform _verticalLayoutTransform;
     
     [Header("Object Pools")]
@@ -35,6 +38,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private int _initialCardPoolSize = 36;
 
     private UIState _currentState;
+    
+    private List<GameObject> _levelsReference;
+    
     private List<GameObject> _horizontalLayoutsReference;
     private List<GameObject> _cardsReference;
     
@@ -47,6 +53,8 @@ public class UIManager : MonoBehaviour
         
         _horizontalLayoutsReference = new List<GameObject>();
         _cardsReference = new List<GameObject>();
+        
+        InitializeLevelMenu();
         InitializeObjectPools();
         SetUIState(UIState.MainMenu);
     }
@@ -81,6 +89,7 @@ public class UIManager : MonoBehaviour
     public void NextLevel()
     {
         DDOL.Instance.LoadNextLevel();
+        SetUIState(UIState.Game);
     }
 
     public void SetupPlayGrid(int rowCount, int columnCount, List<Sprite> sprites, List<int> indexes)
@@ -116,6 +125,40 @@ public class UIManager : MonoBehaviour
     {
         _scoreText.text = "Score: " + score;
         _noOfTriesText.text = "Tries Left: " + noOfTries;
+    }
+
+    private void InitializeLevelMenu()
+    {
+        _levelsReference = new List<GameObject>();
+        int maxLevel = DDOL.Instance.GetLevelCount();
+        int highestUnlocked = DDOL.Instance.HighestUnlockedLevel;
+        
+        for (int i = 0; i < maxLevel; i++)
+        {
+            GameObject level = Instantiate(_playLevelPrefab, _levelHolderTransform);
+            Button levelButton = level.GetComponent<Button>();
+            levelButton.interactable = i <= (highestUnlocked + 1);
+            int levelIndex = i;
+            levelButton.onClick.AddListener(() =>
+            {
+                StartGame(levelIndex);
+            });
+            
+            level.GetComponentInChildren<TMP_Text>().text = "Level " + (i + 1);
+            _levelsReference.Add(level);
+        }
+    }
+
+    private void UpdateLevelMenu()
+    {
+        int maxLevel = DDOL.Instance.GetLevelCount();
+        int highestUnlocked = DDOL.Instance.HighestUnlockedLevel;
+        
+        for (int i = 0; i < maxLevel; i++)
+        {
+            Button levelButton = _levelsReference[i].GetComponent<Button>();
+            levelButton.interactable = i <= (highestUnlocked + 1);
+        }
     }
     
     private void InitializeObjectPools()
@@ -178,6 +221,7 @@ public class UIManager : MonoBehaviour
         }
         
         _cardsReference.Clear();
+        _horizontalLayoutsReference.Clear();
     }
 
     private void CardSelected(CardController card)
@@ -195,5 +239,10 @@ public class UIManager : MonoBehaviour
         _gameUI.SetActive(_currentState == UIState.Game);
         _gameOverUI.SetActive(_currentState == UIState.GameOver);
         _levelCompleteUI.SetActive(_currentState == UIState.LevelComplete);
+
+        if (state == UIState.MainMenu)
+        {
+            UpdateLevelMenu();
+        }
     }
 }
