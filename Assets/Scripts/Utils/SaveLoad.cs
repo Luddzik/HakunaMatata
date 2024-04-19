@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class SaveLoad : MonoBehaviour
+public static class SaveLoad
 {
-    // Start is called before the first frame update
-    void Start()
+    private const string UNLOCKED_LEVEL = "HighestUnlockedLevel";
+    
+    public static void SaveHighestUnlockedLevel(int level)
     {
-        
+        PlayerPrefs.SetInt(UNLOCKED_LEVEL, level);
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    public static void GetHighestUnlockedLevel(out int level)
     {
-        
+        level = PlayerPrefs.GetInt(UNLOCKED_LEVEL, -1);
     }
 }

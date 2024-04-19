@@ -29,7 +29,7 @@ public class DDOL : MonoBehaviour
 
     private void Start()
     {
-        _highestUnlockedLevel = -1;
+        SaveLoad.GetHighestUnlockedLevel(out _highestUnlockedLevel);
         
         _gameController.Initialize();
         _uiManager.Initialize();
@@ -39,6 +39,7 @@ public class DDOL : MonoBehaviour
     private void SetHighestUnlockedLevel(int level)
     {
         _highestUnlockedLevel = level;
+        SaveLoad.SaveHighestUnlockedLevel(level);
     }
 
     public void StartLevel(int level)
