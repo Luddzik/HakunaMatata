@@ -32,6 +32,8 @@ public class DDOL : MonoBehaviour
     
     public void StartLevel(int level)
     {
+        LevelData levelData = _gameController.GetLevelData(level);
         _gameController.StartGame(level);
+        _uiManager.SetupPlayGrid(levelData.rowCount, levelData.columnCount);
     }
 }

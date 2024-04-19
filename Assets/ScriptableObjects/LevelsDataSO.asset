@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameData:
   - level: 0
-    noOfPairs: 0
+    rowCount: 2
+    columnCount: 2

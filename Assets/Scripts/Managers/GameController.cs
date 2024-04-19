@@ -18,6 +18,11 @@ public class GameController : MonoBehaviour
         // Setup game 
         SetupLevel(level);
     }
+    
+    public LevelData GetLevelData(int level)
+    {
+        return _gameDataSO.GetLevelData(level);
+    }
 
     private void SetupLevel(int level)
     {

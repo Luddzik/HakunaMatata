@@ -16,5 +16,6 @@ public class SOLevelData : ScriptableObject
 public struct LevelData
 {
     public int level;
-    public int noOfPairs;
+    public int rowCount;
+    public int columnCount;
 }
